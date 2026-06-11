@@ -126,3 +126,44 @@ Fonts: **Outfit** (display/headings) + **Inter** (body)
 - **Database:** MongoDB Atlas (already cloud-hosted)
 
 Remember to update `CLIENT_URL` in your server `.env` to your Vercel URL before deploying.
+
+---
+
+## 🎬 Stage 2 — TMDB Setup
+
+### 1. Get a free TMDB API key
+
+1. Create a free account at [themoviedb.org](https://www.themoviedb.org/signup)
+2. Go to **Settings → API → Create → Developer**
+3. Copy your **API Key (v3 auth)**
+
+### 2. Add it to your `.env`
+
+```env
+TMDB_API_KEY=paste_your_key_here
+TMDB_BASE_URL=https://api.themoviedb.org/3
+```
+
+### 3. New pages in Stage 2
+
+| Route | Page |
+|-------|------|
+| `/` | Home — hero banner + 5 movie rows |
+| `/movies` | Browse all movies, sort + genre filter, pagination |
+| `/genres` | Visual genre grid, click to browse by genre |
+| `/search` | Live debounced search |
+| `/movie/:id` | Full detail — cast, trailer link, similar movies |
+
+### New API endpoints (all protected)
+
+| Method | Route | Description |
+|--------|-------|-------------|
+| GET | `/api/movies/trending` | Trending this week |
+| GET | `/api/movies/popular` | Popular movies |
+| GET | `/api/movies/top-rated` | Top rated |
+| GET | `/api/movies/upcoming` | Upcoming releases |
+| GET | `/api/movies/now-playing` | In theatres now |
+| GET | `/api/movies/genres` | Genre list |
+| GET | `/api/movies/genre/:id` | Movies by genre |
+| GET | `/api/movies/search?q=` | Search movies |
+| GET | `/api/movies/:id` | Full movie detail + cast + videos + similar |

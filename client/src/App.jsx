@@ -7,10 +7,13 @@ import Spinner from './components/common/Spinner.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import RegisterPage from './pages/RegisterPage.jsx';
 import HomePage from './pages/HomePage.jsx';
+import MoviesPage from './pages/MoviesPage.jsx';
+import GenresPage from './pages/GenresPage.jsx';
+import SearchPage from './pages/SearchPage.jsx';
+import MovieDetailPage from './pages/MovieDetailPage.jsx';
 import ProfilePage from './pages/ProfilePage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
 
-// Redirect authenticated users away from auth pages
 const PublicRoute = ({ children }) => {
   const { user, loading } = useAuth();
   if (loading) return (
@@ -21,28 +24,27 @@ const PublicRoute = ({ children }) => {
   return user ? <Navigate to="/" replace /> : children;
 };
 
-const App = () => {
-  return (
-    <Routes>
-      {/* Public */}
-      <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
-      <Route path="/register" element={<PublicRoute><RegisterPage /></PublicRoute>} />
+const App = () => (
+  <Routes>
+    {/* Public */}
+    <Route path="/login"    element={<PublicRoute><LoginPage /></PublicRoute>} />
+    <Route path="/register" element={<PublicRoute><RegisterPage /></PublicRoute>} />
 
-      {/* Protected */}
-      <Route path="/" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
-      <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+    {/* Protected */}
+    <Route path="/"          element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
+    <Route path="/movies"    element={<ProtectedRoute><MoviesPage /></ProtectedRoute>} />
+    <Route path="/genres"    element={<ProtectedRoute><GenresPage /></ProtectedRoute>} />
+    <Route path="/search"    element={<ProtectedRoute><SearchPage /></ProtectedRoute>} />
+    <Route path="/movie/:id" element={<ProtectedRoute><MovieDetailPage /></ProtectedRoute>} />
+    <Route path="/profile"   element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
 
-      {/* Stubs for future stages */}
-      <Route path="/movies" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
-      <Route path="/series" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
-      <Route path="/genres" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
-      <Route path="/my-list" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
-      <Route path="/search" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
+    {/* Stubs (Stage 3+) */}
+    <Route path="/series"  element={<ProtectedRoute><MoviesPage /></ProtectedRoute>} />
+    <Route path="/my-list" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
 
-      {/* 404 */}
-      <Route path="*" element={<NotFoundPage />} />
-    </Routes>
-  );
-};
+    {/* 404 */}
+    <Route path="*" element={<NotFoundPage />} />
+  </Routes>
+);
 
 export default App;
