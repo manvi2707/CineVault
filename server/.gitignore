@@ -1,0 +1,15 @@
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Node / Python common ignores (optional but useful)
+node_modules/
+__pycache__/
+*.pyc
+dist/
+build/
+
+# OS files
+.DS_Store
+Thumbs.db
