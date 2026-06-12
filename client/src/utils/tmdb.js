@@ -23,3 +23,5 @@ export const ratingColor = (r) => {
   if (r >= 6) return 'text-brand-accent';
   return 'text-brand-textSecondary';
 };
+
+

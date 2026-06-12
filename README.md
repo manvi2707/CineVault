@@ -167,3 +167,32 @@ TMDB_BASE_URL=https://api.themoviedb.org/3
 | GET | `/api/movies/genre/:id` | Movies by genre |
 | GET | `/api/movies/search?q=` | Search movies |
 | GET | `/api/movies/:id` | Full movie detail + cast + videos + similar |
+
+---
+
+## 👤 Stage 3 — Profile Editing & My List
+
+### New pages
+
+| Route | Page |
+|-------|------|
+| `/profile` | View account details, My List summary, link to edit |
+| `/profile/edit` | Edit display name, pick avatar color, change password |
+| `/my-list` | Grid of all movies saved to your watchlist |
+
+### New API endpoints (all protected)
+
+| Method | Route | Description |
+|--------|-------|-------------|
+| PUT | `/api/user/profile` | Update `name` and/or `avatar` (0–5) |
+| PUT | `/api/user/password` | Change password (requires current password) |
+| GET | `/api/user/mylist` | Get saved movies, newest first |
+| POST | `/api/user/mylist` | Add a movie `{ movieId, title, poster_path, vote_average, release_date }` |
+| DELETE | `/api/user/mylist/:movieId` | Remove a movie from the list |
+
+### How it works
+
+- The bookmark icon appears on every `MovieCard` hover overlay and on the movie detail page — click to toggle add/remove.
+- `MyListContext` keeps the list in memory and updates optimistically (instant UI feedback, rolls back on error).
+- Avatar colors are stored as a number (0–5) on the user — `AvatarPicker` lets you choose one of 6 color swatches matched to your initials.
+- Password change requires the current password and re-hashes via the existing `User` model `pre('save')` hook.

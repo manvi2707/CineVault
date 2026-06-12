@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { posterUrl, ratingColor } from '../../utils/tmdb.js';
+import { MyListIconButton } from './MyListButton.jsx';
 
 const PLACEHOLDER = (
   <div className="w-full h-full flex flex-col items-center justify-center bg-brand-surfaceHover gap-2">
@@ -61,6 +62,8 @@ const MovieCard = ({ movie, size = 'md' }) => {
                 <path d="M8 5v14l11-7z" />
               </svg>
             </button>
+            {/* My List toggle */}
+            <MyListIconButton movie={movie} />
           </div>
           <p className="text-xs text-brand-textPrimary font-medium leading-tight line-clamp-2">{title}</p>
         </div>

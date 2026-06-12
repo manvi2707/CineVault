@@ -1,6 +1,18 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 
+const listItemSchema = new mongoose.Schema(
+  {
+    movieId: { type: Number, required: true },
+    title: String,
+    poster_path: String,
+    vote_average: Number,
+    release_date: String,
+    addedAt: { type: Date, default: Date.now },
+  },
+  { _id: false }
+);
+
 const userSchema = new mongoose.Schema(
   {
     name: {
@@ -30,12 +42,10 @@ const userSchema = new mongoose.Schema(
       min: 0,
       max: 5,
     },
-    myList: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Movie',
-      },
-    ],
+    myList: {
+      type: [listItemSchema],
+      default: [],
+    },
   },
   { timestamps: true }
 );

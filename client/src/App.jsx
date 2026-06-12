@@ -12,6 +12,8 @@ import GenresPage from './pages/GenresPage.jsx';
 import SearchPage from './pages/SearchPage.jsx';
 import MovieDetailPage from './pages/MovieDetailPage.jsx';
 import ProfilePage from './pages/ProfilePage.jsx';
+import EditProfilePage from './pages/EditProfilePage.jsx';
+import MyListPage from './pages/MyListPage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
 
 const PublicRoute = ({ children }) => {
@@ -31,16 +33,17 @@ const App = () => (
     <Route path="/register" element={<PublicRoute><RegisterPage /></PublicRoute>} />
 
     {/* Protected */}
-    <Route path="/"          element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
-    <Route path="/movies"    element={<ProtectedRoute><MoviesPage /></ProtectedRoute>} />
-    <Route path="/genres"    element={<ProtectedRoute><GenresPage /></ProtectedRoute>} />
-    <Route path="/search"    element={<ProtectedRoute><SearchPage /></ProtectedRoute>} />
-    <Route path="/movie/:id" element={<ProtectedRoute><MovieDetailPage /></ProtectedRoute>} />
-    <Route path="/profile"   element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+    <Route path="/"            element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
+    <Route path="/movies"      element={<ProtectedRoute><MoviesPage /></ProtectedRoute>} />
+    <Route path="/genres"      element={<ProtectedRoute><GenresPage /></ProtectedRoute>} />
+    <Route path="/search"      element={<ProtectedRoute><SearchPage /></ProtectedRoute>} />
+    <Route path="/movie/:id"   element={<ProtectedRoute><MovieDetailPage /></ProtectedRoute>} />
+    <Route path="/profile"     element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+    <Route path="/profile/edit" element={<ProtectedRoute><EditProfilePage /></ProtectedRoute>} />
+    <Route path="/my-list"     element={<ProtectedRoute><MyListPage /></ProtectedRoute>} />
 
-    {/* Stubs (Stage 3+) */}
+    {/* Stub (Stage 4+) */}
     <Route path="/series"  element={<ProtectedRoute><MoviesPage /></ProtectedRoute>} />
-    <Route path="/my-list" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
 
     {/* 404 */}
     <Route path="*" element={<NotFoundPage />} />

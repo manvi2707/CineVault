@@ -39,7 +39,20 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   }, []);
 
-  const value = { user, loading, register, login, logout };
+  // Update name and/or avatar
+  const updateProfile = useCallback(async ({ name, avatar }) => {
+    const { data } = await api.put('/user/profile', { name, avatar });
+    setUser(data.user);
+    return data.user;
+  }, []);
+
+  // Change password
+  const changePassword = useCallback(async (currentPassword, newPassword) => {
+    const { data } = await api.put('/user/password', { currentPassword, newPassword });
+    return data;
+  }, []);
+
+  const value = { user, loading, register, login, logout, updateProfile, changePassword };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

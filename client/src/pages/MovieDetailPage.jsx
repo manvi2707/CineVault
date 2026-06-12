@@ -3,6 +3,7 @@ import Navbar from '../components/layout/Navbar.jsx';
 import MovieRow from '../components/movies/MovieRow.jsx';
 import Spinner from '../components/common/Spinner.jsx';
 import { useMovie } from '../hooks/useMovies.js';
+import { MyListButton } from '../components/movies/MyListButton.jsx';
 import { backdropUrl, posterUrl, formatRuntime, ratingColor } from '../utils/tmdb.js';
 
 const Badge = ({ children }) => (
@@ -175,15 +176,7 @@ const MovieDetailPage = () => {
                   Watch Trailer
                 </a>
               )}
-              <button className="flex items-center gap-2 px-6 py-3 rounded-lg border border-brand-border
-                                 text-brand-textSecondary hover:text-brand-textPrimary hover:border-brand-accent
-                                 transition-all duration-200 text-sm font-medium">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
-                    d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0z" />
-                </svg>
-                Add to My List
-              </button>
+              <MyListButton movie={movie} />
             </div>
 
             {/* Crew info */}
