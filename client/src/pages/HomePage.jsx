@@ -3,19 +3,25 @@ import { useAuth } from '../context/AuthContext.jsx';
 import Navbar from '../components/layout/Navbar.jsx';
 import HeroBanner from '../components/movies/HeroBanner.jsx';
 import MovieRow from '../components/movies/MovieRow.jsx';
-import { useHomeRows } from '../hooks/useMovies.js';
+import { useHomeRows, useFetch } from '../hooks/useMovies.js';
 
 const HomePage = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const { trending, popular, topRated, upcoming, nowPlaying } = useHomeRows();
+  const popularTV = useFetch('/tv/popular');
+  const featured = useFetch('/movies/featured');
+
+  const heroMovies = featured.data?.results?.length
+    ? featured.data.results
+    : trending.data?.results || [];
 
   return (
     <div className="min-h-screen bg-brand-bg">
       <Navbar />
 
       {/* Hero */}
-      <HeroBanner movies={trending.data?.results || []} />
+      <HeroBanner movies={heroMovies} />
 
       {/* Movie rows */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -31,6 +37,14 @@ const HomePage = () => {
           movies={nowPlaying.data?.results}
           loading={nowPlaying.loading}
           error={nowPlaying.error}
+        />
+        <MovieRow
+          title="Popular Series"
+          movies={popularTV.data?.results}
+          loading={popularTV.loading}
+          error={popularTV.error}
+          seeAllPath="/series"
+          mediaType="tv"
         />
         <MovieRow
           title="Popular Movies"

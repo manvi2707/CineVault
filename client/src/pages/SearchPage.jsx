@@ -4,7 +4,7 @@ import Navbar from '../components/layout/Navbar.jsx';
 import MovieGrid from '../components/movies/MovieGrid.jsx';
 import Pagination from '../components/common/Pagination.jsx';
 import Spinner from '../components/common/Spinner.jsx';
-import { useSearch } from '../hooks/useMovies.js';
+import { useMultiSearch } from '../hooks/useMovies.js';
 
 const SearchPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -12,7 +12,7 @@ const SearchPage = () => {
   const [query, setQuery] = useState(initialQ);
   const [page, setPage] = useState(1);
 
-  const { data, loading, error } = useSearch(query, page);
+  const { data, loading, error } = useMultiSearch(query, page);
 
   const handleInput = (e) => {
     setQuery(e.target.value);
@@ -57,7 +57,7 @@ const SearchPage = () => {
             type="text"
             value={query}
             onChange={handleInput}
-            placeholder="Search for movies, directors, titles…"
+            placeholder="Search for movies, series, titles…"
             autoFocus
             className="w-full bg-brand-surface text-brand-textPrimary placeholder-brand-textSecondary
                        pl-12 pr-12 py-4 rounded-xl border border-brand-border
@@ -106,7 +106,7 @@ const SearchPage = () => {
               movies={data?.results}
               loading={loading && !data}
               error={error}
-              emptyMessage={`No movies found for "${query}"`}
+              emptyMessage={`No results found for "${query}"`}
             />
 
             <Pagination

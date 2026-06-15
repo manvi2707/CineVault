@@ -4,6 +4,7 @@ import bcrypt from 'bcryptjs';
 const listItemSchema = new mongoose.Schema(
   {
     movieId: { type: Number, required: true },
+    mediaType: { type: String, enum: ['movie', 'tv'], default: 'movie' },
     title: String,
     poster_path: String,
     vote_average: Number,
@@ -41,6 +42,11 @@ const userSchema = new mongoose.Schema(
       default: 0,
       min: 0,
       max: 5,
+    },
+    role: {
+      type: String,
+      enum: ['user', 'admin'],
+      default: 'user',
     },
     myList: {
       type: [listItemSchema],

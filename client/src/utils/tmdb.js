@@ -24,4 +24,17 @@ export const ratingColor = (r) => {
   return 'text-brand-textSecondary';
 };
 
+// Normalize a movie or TV item so components can read consistent fields:
+// .displayTitle, .displayDate, .mediaType
+export const normalizeMedia = (item, fallbackType = 'movie') => {
+  if (!item) return item;
+  const mediaType = item.media_type || fallbackType;
+  return {
+    ...item,
+    mediaType,
+    displayTitle: item.title || item.name || 'Untitled',
+    displayDate: item.release_date || item.first_air_date || null,
+  };
+};
 
+export const formatYear = (dateStr) => dateStr?.slice(0, 4) || null;

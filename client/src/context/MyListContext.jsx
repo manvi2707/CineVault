@@ -27,17 +27,19 @@ export const MyListProvider = ({ children }) => {
   }, [user]);
 
   const isInList = useCallback(
-    (movieId) => list.some((m) => m.movieId === movieId),
+    (movieId, mediaType = 'movie') =>
+      list.some((m) => m.movieId === movieId && (m.mediaType || 'movie') === mediaType),
     [list]
   );
 
-  const addToList = useCallback(async (movie) => {
+  const addToList = useCallback(async (movie, mediaType = 'movie') => {
     const payload = {
       movieId: movie.id,
-      title: movie.title,
+      mediaType,
+      title: movie.title || movie.name,
       poster_path: movie.poster_path,
       vote_average: movie.vote_average,
-      release_date: movie.release_date,
+      release_date: movie.release_date || movie.first_air_date,
     };
     // Optimistic update
     setList((prev) => [{ ...payload, addedAt: new Date().toISOString() }, ...prev]);
@@ -46,16 +48,16 @@ export const MyListProvider = ({ children }) => {
       setList(data.list || []);
       toast.success('Added to My List');
     } catch (err) {
-      setList((prev) => prev.filter((m) => m.movieId !== movie.id));
+      setList((prev) => prev.filter((m) => !(m.movieId === movie.id && m.mediaType === mediaType)));
       toast.error(err.message);
     }
   }, []);
 
-  const removeFromList = useCallback(async (movieId) => {
+  const removeFromList = useCallback(async (movieId, mediaType = 'movie') => {
     const prevList = list;
-    setList((prev) => prev.filter((m) => m.movieId !== movieId));
+    setList((prev) => prev.filter((m) => !(m.movieId === movieId && (m.mediaType || 'movie') === mediaType)));
     try {
-      const { data } = await api.delete(`/user/mylist/${movieId}`);
+      const { data } = await api.delete(`/user/mylist/${movieId}`, { params: { mediaType } });
       setList(data.list || []);
       toast.success('Removed from My List');
     } catch (err) {
@@ -64,11 +66,11 @@ export const MyListProvider = ({ children }) => {
     }
   }, [list]);
 
-  const toggleList = useCallback((movie) => {
-    if (isInList(movie.id)) {
-      removeFromList(movie.id);
+  const toggleList = useCallback((movie, mediaType = 'movie') => {
+    if (isInList(movie.id, mediaType)) {
+      removeFromList(movie.id, mediaType);
     } else {
-      addToList(movie);
+      addToList(movie, mediaType);
     }
   }, [isInList, addToList, removeFromList]);
 

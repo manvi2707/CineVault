@@ -13,13 +13,13 @@ const BookmarkIcon = ({ filled }) => (
 );
 
 // Compact circular icon button — used on MovieCard hover overlay
-export const MyListIconButton = ({ movie, className = '' }) => {
+export const MyListIconButton = ({ movie, mediaType = 'movie', className = '' }) => {
   const { isInList, toggleList } = useMyList();
-  const inList = isInList(movie.id);
+  const inList = isInList(movie.id, mediaType);
 
   return (
     <button
-      onClick={(e) => { e.stopPropagation(); toggleList(movie); }}
+      onClick={(e) => { e.stopPropagation(); toggleList(movie, mediaType); }}
       className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200
                   ${inList
                     ? 'bg-brand-accent text-brand-bg'
@@ -33,14 +33,14 @@ export const MyListIconButton = ({ movie, className = '' }) => {
   );
 };
 
-// Full button with label — used on MovieDetailPage
-export const MyListButton = ({ movie, className = '' }) => {
+// Full button with label — used on detail pages
+export const MyListButton = ({ movie, mediaType = 'movie', className = '' }) => {
   const { isInList, toggleList } = useMyList();
-  const inList = isInList(movie.id);
+  const inList = isInList(movie.id, mediaType);
 
   return (
     <button
-      onClick={() => toggleList(movie)}
+      onClick={() => toggleList(movie, mediaType)}
       className={`flex items-center gap-2 px-6 py-3 rounded-lg border transition-all duration-200 text-sm font-medium
                   ${inList
                     ? 'bg-brand-accent text-brand-bg border-brand-accent hover:bg-brand-accentHover'

@@ -1,4 +1,26 @@
 import tmdb from '../utils/tmdb.js';
+import FeaturedContent from '../models/FeaturedContent.js';
+
+// GET /api/movies/featured
+// Public (protected by login only) - returns admin-curated hero content
+export const getFeatured = async (req, res, next) => {
+  try {
+    const featured = await FeaturedContent.find().sort({ order: 1, createdAt: -1 });
+    res.json({ results: featured.map((f) => ({
+      id: f.tmdbId,
+      media_type: f.mediaType,
+      title: f.title,
+      name: f.title,
+      overview: f.overview,
+      poster_path: f.poster_path,
+      backdrop_path: f.backdrop_path,
+      vote_average: f.vote_average,
+      release_date: f.release_date,
+      first_air_date: f.mediaType === 'tv' ? f.release_date : undefined,
+      genre_ids: f.genre_ids || [],
+    })) });
+  } catch (err) { next(err); }
+};
 
 // GET /api/movies/trending
 export const getTrending = async (req, res, next) => {

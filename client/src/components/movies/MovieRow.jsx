@@ -10,7 +10,7 @@ const SkeletonCard = () => (
   </div>
 );
 
-const MovieRow = ({ title, movies, loading, error, seeAllPath }) => {
+const MovieRow = ({ title, movies, loading, error, seeAllPath, mediaType }) => {
   const rowRef = useRef(null);
   const navigate = useNavigate();
 
@@ -75,7 +75,7 @@ const MovieRow = ({ title, movies, loading, error, seeAllPath }) => {
       >
         {loading
           ? Array.from({ length: 8 }).map((_, i) => <SkeletonCard key={i} />)
-          : movies?.map((movie) => <MovieCard key={movie.id} movie={movie} />)
+          : movies?.map((movie) => <MovieCard key={`${mediaType || movie.media_type || 'movie'}-${movie.id}`} movie={movie} mediaType={mediaType} />)
         }
       </div>
     </section>

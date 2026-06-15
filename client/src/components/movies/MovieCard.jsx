@@ -12,13 +12,18 @@ const PLACEHOLDER = (
   </div>
 );
 
-const MovieCard = ({ movie, size = 'md' }) => {
+const MovieCard = ({ movie, size = 'md', mediaType }) => {
   const navigate = useNavigate();
   if (!movie) return null;
 
-  const { id, title, poster_path, vote_average, release_date } = movie;
-  const year = release_date?.slice(0, 4);
+  const { id, poster_path, vote_average } = movie;
+  // Support both movie (title/release_date) and TV (name/first_air_date) shapes
+  const title = movie.title || movie.name;
+  const date = movie.release_date || movie.first_air_date;
+  const year = date?.slice(0, 4);
   const rating = vote_average?.toFixed(1);
+  const type = mediaType || movie.media_type || (movie.first_air_date ? 'tv' : 'movie');
+  const detailPath = type === 'tv' ? `/tv/${id}` : `/movie/${id}`;
 
   const sizes = {
     sm: 'w-32 sm:w-36',
@@ -29,10 +34,10 @@ const MovieCard = ({ movie, size = 'md' }) => {
   return (
     <div
       className={`${sizes[size]} flex-shrink-0 group cursor-pointer`}
-      onClick={() => navigate(`/movie/${id}`)}
+      onClick={() => navigate(detailPath)}
       role="button"
       tabIndex={0}
-      onKeyDown={(e) => e.key === 'Enter' && navigate(`/movie/${id}`)}
+      onKeyDown={(e) => e.key === 'Enter' && navigate(detailPath)}
       aria-label={`${title} (${year})`}
     >
       {/* Poster */}
@@ -56,17 +61,24 @@ const MovieCard = ({ movie, size = 'md' }) => {
             {/* Play button */}
             <button className="w-8 h-8 rounded-full bg-brand-accent flex items-center justify-center
                                hover:bg-brand-accentHover transition-colors"
-              onClick={(e) => { e.stopPropagation(); navigate(`/movie/${id}`); }}
-              aria-label="View movie">
+              onClick={(e) => { e.stopPropagation(); navigate(detailPath); }}
+              aria-label="View details">
               <svg className="w-4 h-4 text-brand-bg ml-0.5" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M8 5v14l11-7z" />
               </svg>
             </button>
             {/* My List toggle */}
-            <MyListIconButton movie={movie} />
+            <MyListIconButton movie={movie} mediaType={type} />
           </div>
           <p className="text-xs text-brand-textPrimary font-medium leading-tight line-clamp-2">{title}</p>
         </div>
+
+        {/* Media type badge (only show for TV to disambiguate in mixed grids) */}
+        {type === 'tv' && (
+          <div className="absolute top-2 left-2 bg-brand-accent/90 text-brand-bg px-1.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide">
+            Series
+          </div>
+        )}
 
         {/* Rating badge */}
         {rating && (

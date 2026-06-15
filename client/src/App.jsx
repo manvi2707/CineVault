@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext.jsx';
 import ProtectedRoute from './components/layout/ProtectedRoute.jsx';
+import AdminRoute from './components/layout/AdminRoute.jsx';
 import Spinner from './components/common/Spinner.jsx';
 
 // Pages
@@ -8,13 +9,20 @@ import LoginPage from './pages/LoginPage.jsx';
 import RegisterPage from './pages/RegisterPage.jsx';
 import HomePage from './pages/HomePage.jsx';
 import MoviesPage from './pages/MoviesPage.jsx';
+import SeriesPage from './pages/SeriesPage.jsx';
 import GenresPage from './pages/GenresPage.jsx';
 import SearchPage from './pages/SearchPage.jsx';
 import MovieDetailPage from './pages/MovieDetailPage.jsx';
+import TVDetailPage from './pages/TVDetailPage.jsx';
 import ProfilePage from './pages/ProfilePage.jsx';
 import EditProfilePage from './pages/EditProfilePage.jsx';
 import MyListPage from './pages/MyListPage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
+
+// Admin pages
+import AdminDashboard from './pages/admin/AdminDashboard.jsx';
+import AdminUsers from './pages/admin/AdminUsers.jsx';
+import AdminFeatured from './pages/admin/AdminFeatured.jsx';
 
 const PublicRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -33,17 +41,21 @@ const App = () => (
     <Route path="/register" element={<PublicRoute><RegisterPage /></PublicRoute>} />
 
     {/* Protected */}
-    <Route path="/"            element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
-    <Route path="/movies"      element={<ProtectedRoute><MoviesPage /></ProtectedRoute>} />
-    <Route path="/genres"      element={<ProtectedRoute><GenresPage /></ProtectedRoute>} />
-    <Route path="/search"      element={<ProtectedRoute><SearchPage /></ProtectedRoute>} />
-    <Route path="/movie/:id"   element={<ProtectedRoute><MovieDetailPage /></ProtectedRoute>} />
-    <Route path="/profile"     element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+    <Route path="/"             element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
+    <Route path="/movies"       element={<ProtectedRoute><MoviesPage /></ProtectedRoute>} />
+    <Route path="/series"       element={<ProtectedRoute><SeriesPage /></ProtectedRoute>} />
+    <Route path="/genres"       element={<ProtectedRoute><GenresPage /></ProtectedRoute>} />
+    <Route path="/search"       element={<ProtectedRoute><SearchPage /></ProtectedRoute>} />
+    <Route path="/movie/:id"    element={<ProtectedRoute><MovieDetailPage /></ProtectedRoute>} />
+    <Route path="/tv/:id"       element={<ProtectedRoute><TVDetailPage /></ProtectedRoute>} />
+    <Route path="/profile"      element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
     <Route path="/profile/edit" element={<ProtectedRoute><EditProfilePage /></ProtectedRoute>} />
-    <Route path="/my-list"     element={<ProtectedRoute><MyListPage /></ProtectedRoute>} />
+    <Route path="/my-list"      element={<ProtectedRoute><MyListPage /></ProtectedRoute>} />
 
-    {/* Stub (Stage 4+) */}
-    <Route path="/series"  element={<ProtectedRoute><MoviesPage /></ProtectedRoute>} />
+    {/* Admin */}
+    <Route path="/admin"          element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+    <Route path="/admin/users"    element={<AdminRoute><AdminUsers /></AdminRoute>} />
+    <Route path="/admin/featured" element={<AdminRoute><AdminFeatured /></AdminRoute>} />
 
     {/* 404 */}
     <Route path="*" element={<NotFoundPage />} />

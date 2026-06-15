@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/layout/Navbar.jsx';
 import MovieGrid from '../components/movies/MovieGrid.jsx';
 import Pagination from '../components/common/Pagination.jsx';
-import { useGenres, useByGenre } from '../hooks/useMovies.js';
+import { useGenres, useByGenre, useTVGenres, useTVByGenre } from '../hooks/useMovies.js';
 
 // Decorative colors per genre for the genre cards
 const GENRE_COLORS = [
@@ -34,10 +33,25 @@ const GenreCard = ({ genre, index, onClick, isActive }) => (
 );
 
 const GenresPage = () => {
-  const { data: genresData, loading: genresLoading } = useGenres();
+  const [mediaType, setMediaType] = useState('movie'); // 'movie' | 'tv'
   const [activeGenre, setActiveGenre] = useState(null);
   const [page, setPage] = useState(1);
-  const { data, loading, error } = useByGenre(activeGenre?.id, page);
+
+  const { data: movieGenres, loading: movieGenresLoading } = useGenres();
+  const { data: tvGenres, loading: tvGenresLoading } = useTVGenres();
+
+  const genresData = mediaType === 'movie' ? movieGenres : tvGenres;
+  const genresLoading = mediaType === 'movie' ? movieGenresLoading : tvGenresLoading;
+
+  const movieResults = useByGenre(mediaType === 'movie' ? activeGenre?.id : null, page);
+  const tvResults = useTVByGenre(mediaType === 'tv' ? activeGenre?.id : null, page);
+  const { data, loading, error } = mediaType === 'movie' ? movieResults : tvResults;
+
+  const handleMediaTypeChange = (type) => {
+    setMediaType(type);
+    setActiveGenre(null);
+    setPage(1);
+  };
 
   const handleGenreClick = (genre) => {
     if (activeGenre?.id === genre.id) {
@@ -57,9 +71,35 @@ const GenresPage = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         {/* Header */}
-        <div className="flex items-center gap-3 mb-8">
-          <div className="w-1 h-7 bg-brand-accent rounded-full" />
-          <h1 className="font-display text-2xl sm:text-3xl font-bold text-brand-textPrimary">Genres</h1>
+        <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
+          <div className="flex items-center gap-3">
+            <div className="w-1 h-7 bg-brand-accent rounded-full" />
+            <h1 className="font-display text-2xl sm:text-3xl font-bold text-brand-textPrimary">Genres</h1>
+          </div>
+
+          {/* Movie/Series toggle */}
+          <div className="inline-flex border border-brand-border rounded-lg overflow-hidden">
+            <button
+              onClick={() => handleMediaTypeChange('movie')}
+              className={`px-5 py-2 text-sm font-medium transition-all duration-200 ${
+                mediaType === 'movie'
+                  ? 'bg-brand-accent text-brand-bg'
+                  : 'text-brand-textSecondary hover:text-brand-textPrimary'
+              }`}
+            >
+              Movies
+            </button>
+            <button
+              onClick={() => handleMediaTypeChange('tv')}
+              className={`px-5 py-2 text-sm font-medium transition-all duration-200 ${
+                mediaType === 'tv'
+                  ? 'bg-brand-accent text-brand-bg'
+                  : 'text-brand-textSecondary hover:text-brand-textPrimary'
+              }`}
+            >
+              Series
+            </button>
+          </div>
         </div>
 
         {/* Genre grid */}
@@ -104,7 +144,13 @@ const GenresPage = () => {
               </button>
             </div>
 
-            <MovieGrid movies={data?.results} loading={loading} error={error} />
+            <MovieGrid
+              movies={data?.results}
+              loading={loading}
+              error={error}
+              mediaType={mediaType}
+              emptyMessage={`No ${mediaType === 'tv' ? 'series' : 'movies'} found.`}
+            />
 
             <Pagination
               page={page}

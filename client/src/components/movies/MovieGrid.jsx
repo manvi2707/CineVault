@@ -9,7 +9,7 @@ const SkeletonCard = () => (
   </div>
 );
 
-const MovieGrid = ({ movies, loading, error, emptyMessage = 'No movies found.' }) => {
+const MovieGrid = ({ movies, loading, error, emptyMessage = 'No movies found.', mediaType }) => {
   if (loading) {
     return (
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-5">
@@ -45,7 +45,7 @@ const MovieGrid = ({ movies, loading, error, emptyMessage = 'No movies found.' }
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-5">
       {movies.map((movie) => (
-        <MovieCard key={movie.id} movie={movie} />
+        <MovieCard key={`${mediaType || movie.media_type || 'movie'}-${movie.id}`} movie={movie} mediaType={mediaType} />
       ))}
     </div>
   );

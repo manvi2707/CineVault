@@ -9,13 +9,19 @@ const MyListPage = () => {
   const navigate = useNavigate();
 
   // Map stored list items into the shape MovieCard expects
-  const movies = list.map((item) => ({
-    id: item.movieId,
-    title: item.title,
-    poster_path: item.poster_path,
-    vote_average: item.vote_average,
-    release_date: item.release_date,
-  }));
+  const movies = list.map((item) => {
+    const isTV = item.mediaType === 'tv';
+    return {
+      id: item.movieId,
+      mediaType: item.mediaType || 'movie',
+      title: !isTV ? item.title : undefined,
+      name: isTV ? item.title : undefined,
+      poster_path: item.poster_path,
+      vote_average: item.vote_average,
+      release_date: !isTV ? item.release_date : undefined,
+      first_air_date: isTV ? item.release_date : undefined,
+    };
+  });
 
   return (
     <div className="min-h-screen bg-brand-bg">
@@ -56,7 +62,7 @@ const MyListPage = () => {
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-5">
             {movies.map((movie) => (
-              <MovieCard key={movie.id} movie={movie} />
+              <MovieCard key={`${movie.mediaType}-${movie.id}`} movie={movie} mediaType={movie.mediaType} />
             ))}
           </div>
         )}

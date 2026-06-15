@@ -5,8 +5,10 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import authRoutes from './routes/auth.js';
 import moviesRoutes from './routes/movies.js';
+import tvRoutes from './routes/tv.js';
+import searchRoutes from './routes/search.js';
 import userRoutes from './routes/user.js';
-
+import adminRoutes from './routes/admin.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -24,7 +26,10 @@ app.use(cors({
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/movies', moviesRoutes);
+app.use('/api/tv', tvRoutes);
+app.use('/api/search', searchRoutes);
 app.use('/api/user', userRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

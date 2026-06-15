@@ -1,5 +1,6 @@
 import express from 'express';
 import {
+  getFeatured,
   getTrending,
   getPopular,
   getTopRated,
@@ -17,6 +18,7 @@ const router = express.Router();
 // All movie routes require auth
 router.use(protect);
 
+router.get('/featured', getFeatured);
 router.get('/trending', getTrending);
 router.get('/popular', getPopular);
 router.get('/top-rated', getTopRated);

@@ -74,23 +74,23 @@ export const getMyList = async (req, res, next) => {
 };
 
 // @route  POST /api/user/mylist
-// @desc   Add a movie to the list
+// @desc   Add a movie or TV show to the list
 export const addToMyList = async (req, res, next) => {
   try {
-    const { movieId, title, poster_path, vote_average, release_date } = req.body;
+    const { movieId, mediaType = 'movie', title, poster_path, vote_average, release_date } = req.body;
 
     if (!movieId) {
       return res.status(400).json({ message: 'movieId is required.' });
     }
 
     const user = await User.findById(req.user._id);
-    const exists = user.myList.some((m) => m.movieId === movieId);
+    const exists = user.myList.some((m) => m.movieId === movieId && m.mediaType === mediaType);
 
     if (exists) {
       return res.status(200).json({ list: user.myList, message: 'Already in your list.' });
     }
 
-    user.myList.unshift({ movieId, title, poster_path, vote_average, release_date });
+    user.myList.unshift({ movieId, mediaType, title, poster_path, vote_average, release_date });
     await user.save();
     res.status(201).json({ list: user.myList, message: 'Added to your list.' });
   } catch (err) {
@@ -99,13 +99,14 @@ export const addToMyList = async (req, res, next) => {
 };
 
 // @route  DELETE /api/user/mylist/:movieId
-// @desc   Remove a movie from the list
+// @desc   Remove an item from the list (optionally scoped by ?mediaType=)
 export const removeFromMyList = async (req, res, next) => {
   try {
     const movieId = Number(req.params.movieId);
+    const mediaType = req.query.mediaType || 'movie';
     const user = await User.findById(req.user._id);
 
-    user.myList = user.myList.filter((m) => m.movieId !== movieId);
+    user.myList = user.myList.filter((m) => !(m.movieId === movieId && m.mediaType === mediaType));
     await user.save();
 
     res.status(200).json({ list: user.myList, message: 'Removed from your list.' });

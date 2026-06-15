@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { backdropUrl, posterUrl } from '../../utils/tmdb.js';
+import { MyListButton } from './MyListButton.jsx';
 
 const HeroBanner = ({ movies = [] }) => {
   const navigate = useNavigate();
@@ -35,8 +36,11 @@ const HeroBanner = ({ movies = [] }) => {
 
   const backdrop = backdropUrl(movie.backdrop_path);
   const poster = posterUrl(movie.poster_path, 'w342');
-  const year = movie.release_date?.slice(0, 4);
+  const displayTitle = movie.title || movie.name;
+  const year = (movie.release_date || movie.first_air_date)?.slice(0, 4);
   const rating = movie.vote_average?.toFixed(1);
+  const mediaType = movie.media_type || (movie.first_air_date ? 'tv' : 'movie');
+  const detailPath = mediaType === 'tv' ? `/tv/${movie.id}` : `/movie/${movie.id}`;
   const overview = movie.overview?.length > 200
     ? movie.overview.slice(0, 200) + '…'
     : movie.overview;
@@ -68,7 +72,7 @@ const HeroBanner = ({ movies = [] }) => {
               <div className="hidden lg:block flex-shrink-0">
                 <img
                   src={poster}
-                  alt={movie.title}
+                  alt={displayTitle}
                   className="w-36 rounded-xl shadow-2xl border border-brand-border/30"
                 />
               </div>
@@ -102,7 +106,7 @@ const HeroBanner = ({ movies = [] }) => {
               {/* Title */}
               <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-brand-textPrimary
                              leading-[1.05] mb-4 drop-shadow-lg">
-                {movie.title}
+                {displayTitle}
               </h1>
 
               {/* Overview */}
@@ -125,7 +129,7 @@ const HeroBanner = ({ movies = [] }) => {
               {/* CTAs */}
               <div className="flex flex-wrap gap-3">
                 <button
-                  onClick={() => navigate(`/movie/${movie.id}`)}
+                  onClick={() => navigate(detailPath)}
                   className="btn-primary flex items-center gap-2 px-7 py-3"
                 >
                   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -133,17 +137,7 @@ const HeroBanner = ({ movies = [] }) => {
                   </svg>
                   View Details
                 </button>
-                <button
-                  className="flex items-center gap-2 px-6 py-3 rounded-lg border border-brand-border
-                             text-brand-textSecondary hover:text-brand-textPrimary hover:border-brand-accent
-                             transition-all duration-200 text-sm font-medium backdrop-blur-sm"
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
-                      d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" />
-                  </svg>
-                  Add to List
-                </button>
+                <MyListButton movie={movie} mediaType={mediaType} className="backdrop-blur-sm" />
               </div>
             </div>
           </div>
