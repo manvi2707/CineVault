@@ -5,10 +5,12 @@ import MovieGrid from '../components/movies/MovieGrid.jsx';
 import Pagination from '../components/common/Pagination.jsx';
 import Spinner from '../components/common/Spinner.jsx';
 import { useMultiSearch } from '../hooks/useMovies.js';
+import usePageTitle from '../hooks/usePageTitle.js';
 
 const SearchPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const initialQ = searchParams.get('q') || '';
+  usePageTitle('Search', 'Search movies and series on CineVault.');
   const [query, setQuery] = useState(initialQ);
   const [page, setPage] = useState(1);
 

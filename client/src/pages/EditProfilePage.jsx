@@ -6,6 +6,7 @@ import Avatar from '../components/common/Avatar.jsx';
 import AvatarPicker from '../components/common/AvatarPicker.jsx';
 import Spinner from '../components/common/Spinner.jsx';
 import toast from 'react-hot-toast';
+import usePageTitle from '../hooks/usePageTitle.js';
 
 const SectionCard = ({ title, children }) => (
   <div className="card-surface p-6 sm:p-8 mb-6">
@@ -16,6 +17,7 @@ const SectionCard = ({ title, children }) => (
 
 const EditProfilePage = () => {
   const { user, updateProfile, changePassword } = useAuth();
+  usePageTitle('Edit Profile');
   const navigate = useNavigate();
 
   // Profile form state

@@ -3,9 +3,11 @@ import Navbar from '../components/layout/Navbar.jsx';
 import MovieCard from '../components/movies/MovieCard.jsx';
 import Spinner from '../components/common/Spinner.jsx';
 import { useMyList } from '../context/MyListContext.jsx';
+import usePageTitle from '../hooks/usePageTitle.js';
 
 const MyListPage = () => {
   const { list, loading } = useMyList();
+  usePageTitle('My List');
   const navigate = useNavigate();
 
   // Map stored list items into the shape MovieCard expects

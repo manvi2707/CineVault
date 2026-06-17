@@ -4,9 +4,11 @@ import { useAuth } from '../context/AuthContext.jsx';
 import Logo from '../components/common/Logo.jsx';
 import Spinner from '../components/common/Spinner.jsx';
 import toast from 'react-hot-toast';
+import usePageTitle from '../hooks/usePageTitle.js';
 
 const RegisterPage = () => {
   const { register } = useAuth();
+  usePageTitle('Create Account');
   const navigate = useNavigate();
 
   const [form, setForm] = useState({ name: '', email: '', password: '', confirm: '' });

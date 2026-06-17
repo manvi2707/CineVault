@@ -10,6 +10,7 @@ import searchRoutes from './routes/search.js';
 import userRoutes from './routes/user.js';
 import adminRoutes from './routes/admin.js';
 
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 

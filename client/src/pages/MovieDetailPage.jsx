@@ -5,6 +5,7 @@ import Spinner from '../components/common/Spinner.jsx';
 import { useMovie } from '../hooks/useMovies.js';
 import { MyListButton } from '../components/movies/MyListButton.jsx';
 import { backdropUrl, posterUrl, formatRuntime, ratingColor } from '../utils/tmdb.js';
+import usePageTitle from '../hooks/usePageTitle.js';
 
 const Badge = ({ children }) => (
   <span className="text-xs border border-brand-border text-brand-textSecondary px-3 py-1 rounded-full">
@@ -40,6 +41,7 @@ const MovieDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { data: movie, loading, error } = useMovie(id);
+  usePageTitle(movie?.title, movie?.overview);
 
   if (loading) {
     return (

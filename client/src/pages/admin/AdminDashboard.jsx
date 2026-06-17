@@ -5,6 +5,7 @@ import Avatar from '../../components/common/Avatar.jsx';
 import Spinner from '../../components/common/Spinner.jsx';
 import api from '../../utils/api.js';
 import toast from 'react-hot-toast';
+import usePageTitle from '../../hooks/usePageTitle.js';
 
 const StatCard = ({ label, value, icon }) => (
   <div className="card-surface p-6">
@@ -20,6 +21,7 @@ const StatCard = ({ label, value, icon }) => (
 
 const AdminDashboard = () => {
   const [stats, setStats] = useState(null);
+  usePageTitle('Admin Dashboard');
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 

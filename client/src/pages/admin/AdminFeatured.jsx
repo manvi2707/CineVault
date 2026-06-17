@@ -3,6 +3,7 @@ import AdminLayout from '../../components/layout/AdminLayout.jsx';
 import Spinner from '../../components/common/Spinner.jsx';
 import { posterUrl, ratingColor } from '../../utils/tmdb.js';
 import { useMultiSearch } from '../../hooks/useMovies.js';
+import usePageTitle from '../../hooks/usePageTitle.js';
 import api from '../../utils/api.js';
 import toast from 'react-hot-toast';
 
@@ -118,6 +119,7 @@ const SearchResultRow = ({ item, onAdd, isFeatured, adding }) => {
 
 const AdminFeatured = () => {
   const [featured, setFeatured] = useState([]);
+  usePageTitle('Featured Content');
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState('');
   const [addingId, setAddingId] = useState(null);

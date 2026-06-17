@@ -1,8 +1,10 @@
 import { useNavigate } from 'react-router-dom';
 import Logo from '../components/common/Logo.jsx';
+import usePageTitle from '../hooks/usePageTitle.js';
 
 const NotFoundPage = () => {
   const navigate = useNavigate();
+  usePageTitle('Page Not Found');
   return (
     <div className="min-h-screen bg-brand-bg flex flex-col items-center justify-center px-4 text-center">
       <Logo size="lg" />

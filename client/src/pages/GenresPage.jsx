@@ -3,6 +3,7 @@ import Navbar from '../components/layout/Navbar.jsx';
 import MovieGrid from '../components/movies/MovieGrid.jsx';
 import Pagination from '../components/common/Pagination.jsx';
 import { useGenres, useByGenre, useTVGenres, useTVByGenre } from '../hooks/useMovies.js';
+import usePageTitle from '../hooks/usePageTitle.js';
 
 // Decorative colors per genre for the genre cards
 const GENRE_COLORS = [
@@ -34,6 +35,7 @@ const GenreCard = ({ genre, index, onClick, isActive }) => (
 
 const GenresPage = () => {
   const [mediaType, setMediaType] = useState('movie'); // 'movie' | 'tv'
+  usePageTitle('Genres', 'Explore movies and series by genre on CineVault.');
   const [activeGenre, setActiveGenre] = useState(null);
   const [page, setPage] = useState(1);
 

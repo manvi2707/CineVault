@@ -279,3 +279,25 @@ You should see `✅ Your Name (you@example.com) is now an admin.` Log out and ba
 - Admins can't demote themselves or delete their own account from the panel (prevents accidental lockout)
 - Featured titles are deduplicated — the same title can't be added twice
 - The homepage hero gracefully falls back to TMDB trending content if the featured list is empty
+
+---
+
+## ⚡ Stage 6 — Polish & Performance
+
+### What changed
+
+| Area | Improvement |
+|------|-------------|
+| **Error handling** | `ErrorBoundary` wraps the whole app — a render crash now shows a styled fallback screen ("Something went off-script") instead of a blank white page, with a one-click reload |
+| **Code splitting** | All pages except Login/Register/Home/404 are lazy-loaded via `React.lazy` + `Suspense`. Main JS bundle dropped from **321 KB → 265 KB** (gzipped 95.6 → 86.9 KB); the rest loads on-demand as 1–8 KB chunks per page |
+| **Perceived performance** | `RouteProgressBar` — a subtle gold bar animates across the top on every navigation, like a native app |
+| **Scroll behavior** | `ScrollToTop` resets scroll position to the top on every route change (previously scroll position carried over, which felt broken on long pages) |
+| **Image loading** | `LazyImage` replaces raw `<img>` tags on movie/series posters — shows a pulsing skeleton until loaded, fades in smoothly, and gracefully falls back to a placeholder icon if the image fails or is missing |
+| **SEO / meta tags** | `usePageTitle` hook sets `document.title` and the meta description per page (e.g. "Movies · CineVault", or the actual film title + overview on detail pages). `index.html` now has Open Graph tags and a `theme-color` for mobile browser chrome |
+| **Deployment readiness** | Added `.gitignore` to both `client/` and `server/`, plus `client/vercel.json` with an SPA rewrite rule so routes like `/movies` or `/profile` don't 404 on a hard refresh once deployed |
+
+### Why this matters before Stage 7 (deployment)
+
+- A smaller initial bundle means faster first load on real-world connections
+- The SPA rewrite rule is required for client-side routing to work correctly on Vercel — without it, refreshing on any route other than `/` would 404
+- Proper page titles matter for browser history, bookmarks, and any future sharing features

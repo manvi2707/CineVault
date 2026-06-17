@@ -4,9 +4,11 @@ import Navbar from '../components/layout/Navbar.jsx';
 import HeroBanner from '../components/movies/HeroBanner.jsx';
 import MovieRow from '../components/movies/MovieRow.jsx';
 import { useHomeRows, useFetch } from '../hooks/useMovies.js';
+import usePageTitle from '../hooks/usePageTitle.js';
 
 const HomePage = () => {
   const { user } = useAuth();
+  usePageTitle(); // default site title for home
   const navigate = useNavigate();
   const { trending, popular, topRated, upcoming, nowPlaying } = useHomeRows();
   const popularTV = useFetch('/tv/popular');

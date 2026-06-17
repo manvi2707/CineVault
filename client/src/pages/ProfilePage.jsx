@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext.jsx';
 import { useMyList } from '../context/MyListContext.jsx';
 import Navbar from '../components/layout/Navbar.jsx';
 import Avatar from '../components/common/Avatar.jsx';
+import usePageTitle from '../hooks/usePageTitle.js';
 
 const InfoRow = ({ label, value }) => (
   <div className="flex items-center justify-between py-4 border-b border-brand-border/50 last:border-b-0">
@@ -14,6 +15,7 @@ const InfoRow = ({ label, value }) => (
 const ProfilePage = () => {
   const { user } = useAuth();
   const { list } = useMyList();
+  usePageTitle('My Profile');
   const navigate = useNavigate();
 
   const joinDate = user?.createdAt

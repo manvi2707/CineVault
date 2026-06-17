@@ -4,9 +4,11 @@ import { useAuth } from '../context/AuthContext.jsx';
 import Logo from '../components/common/Logo.jsx';
 import Spinner from '../components/common/Spinner.jsx';
 import toast from 'react-hot-toast';
+import usePageTitle from '../hooks/usePageTitle.js';
 
 const LoginPage = () => {
   const { login } = useAuth();
+  usePageTitle('Sign In');
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || '/';

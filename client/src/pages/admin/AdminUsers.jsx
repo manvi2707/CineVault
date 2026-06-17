@@ -4,11 +4,13 @@ import Avatar from '../../components/common/Avatar.jsx';
 import Spinner from '../../components/common/Spinner.jsx';
 import Pagination from '../../components/common/Pagination.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
+import usePageTitle from '../../hooks/usePageTitle.js';
 import api from '../../utils/api.js';
 import toast from 'react-hot-toast';
 
 const AdminUsers = () => {
   const { user: currentUser } = useAuth();
+  usePageTitle('Manage Users');
   const [users, setUsers] = useState([]);
   const [total, setTotal] = useState(0);
   const [totalPages, setTotalPages] = useState(1);

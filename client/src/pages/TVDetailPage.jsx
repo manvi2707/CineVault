@@ -5,6 +5,7 @@ import Spinner from '../components/common/Spinner.jsx';
 import { useTVShow } from '../hooks/useMovies.js';
 import { MyListButton } from '../components/movies/MyListButton.jsx';
 import { backdropUrl, posterUrl, formatRuntime, ratingColor } from '../utils/tmdb.js';
+import usePageTitle from '../hooks/usePageTitle.js';
 
 const Badge = ({ children }) => (
   <span className="text-xs border border-brand-border text-brand-textSecondary px-3 py-1 rounded-full">
@@ -59,6 +60,7 @@ const TVDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { data: show, loading, error } = useTVShow(id);
+  usePageTitle(show?.name, show?.overview);
 
   if (loading) {
     return (

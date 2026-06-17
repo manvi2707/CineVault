@@ -5,6 +5,7 @@ import MovieGrid from '../components/movies/MovieGrid.jsx';
 import GenreFilter from '../components/movies/GenreFilter.jsx';
 import Pagination from '../components/common/Pagination.jsx';
 import { useFetch, useTVByGenre, useTVGenres } from '../hooks/useMovies.js';
+import usePageTitle from '../hooks/usePageTitle.js';
 
 const SORT_OPTIONS = [
   { value: 'popular', label: 'Popular' },
@@ -16,6 +17,7 @@ const SORT_OPTIONS = [
 const SeriesPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [page, setPage] = useState(1);
+  usePageTitle('Series', 'Browse TV series by popularity, rating, and genre on CineVault.');
   const [selectedGenre, setSelectedGenre] = useState(null);
 
   const sort = searchParams.get('sort') || 'popular';

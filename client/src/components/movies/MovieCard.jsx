@@ -1,16 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { posterUrl, ratingColor } from '../../utils/tmdb.js';
 import { MyListIconButton } from './MyListButton.jsx';
-
-const PLACEHOLDER = (
-  <div className="w-full h-full flex flex-col items-center justify-center bg-brand-surfaceHover gap-2">
-    <svg className="w-10 h-10 text-brand-border" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1}
-        d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M13.5 12a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
-    </svg>
-    <span className="text-xs text-brand-border">No image</span>
-  </div>
-);
+import LazyImage from '../common/LazyImage.jsx';
 
 const MovieCard = ({ movie, size = 'md', mediaType }) => {
   const navigate = useNavigate();
@@ -44,14 +35,7 @@ const MovieCard = ({ movie, size = 'md', mediaType }) => {
       <div className="relative aspect-[2/3] rounded-lg overflow-hidden bg-brand-surface border border-brand-border/30
                       group-hover:border-brand-accent/50 group-hover:scale-[1.03]
                       transition-all duration-300 shadow-lg">
-        {poster_path ? (
-          <img
-            src={posterUrl(poster_path)}
-            alt={title}
-            loading="lazy"
-            className="w-full h-full object-cover"
-          />
-        ) : PLACEHOLDER}
+        <LazyImage src={posterUrl(poster_path)} alt={title} />
 
         {/* Hover overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent
