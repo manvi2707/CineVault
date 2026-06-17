@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: cinevault-server
+    runtime: node
+    rootDir: server
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+      - key: MONGO_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: CLIENT_URL
+        sync: false
+      - key: TMDB_API_KEY
+        sync: false
+      - key: TMDB_BASE_URL
+        value: https://api.themoviedb.org/3

@@ -301,3 +301,145 @@ You should see `✅ Your Name (you@example.com) is now an admin.` Log out and ba
 - A smaller initial bundle means faster first load on real-world connections
 - The SPA rewrite rule is required for client-side routing to work correctly on Vercel — without it, refreshing on any route other than `/` would 404
 - Proper page titles matter for browser history, bookmarks, and any future sharing features
+
+---
+
+## 🚀 Stage 7 — Deployment
+
+This stage has no new app features — it's about getting CineVault live on the internet. You'll deploy:
+
+- **Database**: MongoDB Atlas (already done, since Stage 1 — just confirm network access below)
+- **Backend**: Render (free tier)
+- **Frontend**: Vercel (free tier)
+
+### Step 0 — Push your code to GitHub
+
+If you haven't already:
+
+```bash
+cd Cine-Vault
+git init
+git add .
+git commit -m "CineVault — ready for deployment"
+```
+
+Create a new repo on [github.com/new](https://github.com/new), then:
+
+```bash
+git remote add origin https://github.com/<your-username>/cinevault.git
+git branch -M main
+git push -u origin main
+```
+
+Because `.gitignore` is already in place, your `.env` files and `node_modules` will **not** be pushed — good, that's exactly what you want.
+
+---
+
+### Step 1 — MongoDB Atlas: allow Render to connect
+
+Render's servers don't have a fixed IP on the free tier, so:
+
+1. Go to your [Atlas dashboard](https://cloud.mongodb.com) → **Network Access**
+2. Click **Add IP Address** → **Allow Access from Anywhere** (`0.0.0.0/0`)
+3. Confirm
+
+This is safe because your database still requires the correct username/password in the connection string — this setting only controls *which IPs are allowed to attempt a connection at all*.
+
+---
+
+### Step 2 — Deploy the backend to Render
+
+1. Go to [render.com](https://render.com) → sign up / log in (GitHub login is easiest)
+2. Click **New +** → **Web Service**
+3. Connect your GitHub repo
+4. Render should auto-detect the `render.yaml` blueprint in the repo root. If it asks you to configure manually instead, use these settings:
+   - **Root Directory**: `server`
+   - **Build Command**: `npm install`
+   - **Start Command**: `npm start`
+5. Under **Environment Variables**, add each of these (copy values from your local `server/.env`):
+
+   | Key | Value |
+   |-----|-------|
+   | `NODE_ENV` | `production` |
+   | `MONGO_URI` | your Atlas connection string |
+   | `JWT_SECRET` | your secret (same one or generate a new one) |
+   | `TMDB_API_KEY` | your TMDB key |
+   | `TMDB_BASE_URL` | `https://api.themoviedb.org/3` |
+   | `CLIENT_URL` | leave blank for now — you'll fill this in after Step 3 |
+
+6. Click **Create Web Service**. Render will build and deploy — this takes 2–5 minutes.
+7. Once live, copy your backend URL, e.g. `https://cinevault-server.onrender.com`
+8. Visit `https://cinevault-server.onrender.com/api/health` in your browser — you should see `{"status":"CineVault server is running",...}`. If you see this, your backend is live.
+
+> **Free tier note:** Render's free web services "spin down" after 15 minutes of inactivity and take 30–60 seconds to wake back up on the next request. This is normal — your first request after idle time will just feel slow once.
+
+---
+
+### Step 3 — Deploy the frontend to Vercel
+
+1. Go to [vercel.com](https://vercel.com) → sign up / log in (GitHub login is easiest)
+2. Click **Add New** → **Project** → import your GitHub repo
+3. Configure:
+   - **Root Directory**: click "Edit" and set it to `client`
+   - **Framework Preset**: Vercel should auto-detect **Vite**
+   - **Build Command**: `npm run build` (default, should already be filled)
+   - **Output Directory**: `dist` (default)
+4. Expand **Environment Variables** and add:
+
+   | Key | Value |
+   |-----|-------|
+   | `VITE_API_URL` | your Render backend URL from Step 2, e.g. `https://cinevault-server.onrender.com` |
+
+5. Click **Deploy**. This takes 1–2 minutes.
+6. Once live, copy your frontend URL, e.g. `https://cinevault.vercel.app`
+
+---
+
+### Step 4 — Connect the two: update CLIENT_URL on Render
+
+1. Go back to your Render service → **Environment**
+2. Set `CLIENT_URL` to your Vercel URL from Step 3, e.g.:
+   ```
+   CLIENT_URL=https://cinevault.vercel.app
+   ```
+   (No trailing slash. If you also test Vercel preview URLs later, you can add them comma-separated: `https://cinevault.vercel.app,https://cinevault-git-main-yourname.vercel.app`)
+3. Save — Render will automatically redeploy with the new variable (takes ~1 minute)
+
+---
+
+### Step 5 — Promote yourself to admin on production
+
+Your local `makeAdmin.js` script connects using whatever `MONGO_URI` is in your **local** `.env` — since that's the same Atlas database your production server uses, you can run it locally and it'll take effect immediately on the live site:
+
+```bash
+cd server
+node scripts/makeAdmin.js you@example.com
+```
+
+---
+
+### Step 6 — Test the full flow live
+
+Visit your Vercel URL and walk through:
+
+1. Register a new account → confirms frontend ↔ backend ↔ database all connected
+2. Browse movies/series → confirms TMDB key works in production
+3. Add something to My List → confirms write operations work
+4. Log out, log back in → confirms cookies/JWT work cross-domain
+5. If you ran Step 5, check the Admin Panel link appears in your avatar menu
+
+If registration or login fails with a network error, the most common cause is a typo in `VITE_API_URL` or `CLIENT_URL` — double check both have no trailing slash and use `https://`.
+
+---
+
+### Ongoing: how updates work
+
+Both Vercel and Render are connected to your GitHub repo, so the workflow going forward is simply:
+
+```bash
+git add .
+git commit -m "describe your change"
+git push
+```
+
+Both platforms automatically detect the push and redeploy within a minute or two — no manual redeploy needed.
